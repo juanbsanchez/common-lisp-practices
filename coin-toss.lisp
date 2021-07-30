@@ -36,7 +36,7 @@
 	guess
 	(prompt))))
 
-(defun game ()
+(defun run-game ()
   "Run the actual game"
   
   (if (string= (prompt)
@@ -44,4 +44,4 @@
       (format t "~&You win!")
       (format t "~&You loose!")))
 
-(game)
+(run-game)
