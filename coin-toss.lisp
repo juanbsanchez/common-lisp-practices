@@ -22,8 +22,6 @@
   (let ((number (random 2 (make-random-state t))))
     (check-result number)))
 
-(toss-coin)
-
 (defun prompt ()
   "Get user input and loop if it is not 'heads' or 'tails'"
   
