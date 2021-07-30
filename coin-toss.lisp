@@ -3,6 +3,9 @@
   (:use :cl))
 (in-package :coin-toss)
 
+;;; A simple game to practice some functions
+;;; Run game in REPL and see the result. Good Luck! :)
+
 (defun check-result (number)
   "Check number and returns heads or tails"
   
