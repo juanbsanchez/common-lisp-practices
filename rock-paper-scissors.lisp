@@ -6,7 +6,7 @@
 ;;; A simple game to test some functions. Run game in REPL and enjoy! :)
 
 (defparameter *options* '("rock" "paper" "scissors"))
-(setf *score-board* '((user 0) (cpu 0)))
+(defparameter *score-board* '((user 0) (cpu 0)))
 
 
 (defun get-player-choice (options)
