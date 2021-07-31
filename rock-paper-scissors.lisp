@@ -3,7 +3,7 @@
   (:use :cl))
 (in-package :rock-paper-scissors)
 
-(setf options '("rock" "paper" "scissors"))
+(defparameter *options* '("rock" "paper" "scissors"))
 
 (defun get-player-choice (options)
   "prompts the user for an option and returns the option if it is valid"
@@ -19,7 +19,7 @@
   "generate a random option for cpu and return the option"
   
   (nth (random (length options)
-	       (make-random-state t)) options))
+	       (make-random-state t)) *options*))
 
 (defun check-result (player-choice cpu-choice)
   "check user choice and cpu choice and produces formatted output"
@@ -37,7 +37,7 @@
 
 (defun run-game ()
   (let ((cpu-choice (get-cpu-choice))
-	(player-choice (get-player-choice options)))
+	(player-choice (get-player-choice *options*)))
     (format t "~&You entered: ~A, CPU entered: ~A" player-choice cpu-choice)
     (check-result player-choice cpu-choice)))
 
