@@ -3,6 +3,13 @@
   (:use :cl))
 (in-package :hangman)
 
+(defparameter *sitcoms* '("cheers"
+			  "friends"
+			  "frasier"
+			  "the big bang theory"
+			  "the it crowd"
+			  "how i met your mother"))
+
 (defun pick-sitcom (sitcoms)
   (nth (random (length sitcoms) (make-random-state t)) sitcoms))
 
@@ -24,7 +31,7 @@
    nil))
 
 (defun get-letter (guessed-letters)
-  (format t "Please enter a letter: ")
+  (format t "~&Please enter a letter: ")
   (let ((user-input (string-downcase (read-line))))
     (cond
       ((zerop (length user-input)) (get-letter guessed-letters))
@@ -34,13 +41,7 @@
 
 (defun game (&key (sitcom nil) (lives 10) (guessed-letters '()))
   (unless sitcom
-  (let ((sitcom (pick-sitcom '(
-			       "cheers"
-			       "friends"
-			       "frasier"
-			       "the big bang theory"
-			       "the it crowd"
-			       "how i met your mother"))))
+  (let ((sitcom (pick-sitcom *sitcoms*)))
     (game :sitcom sitcom)))
   (let ((game-over (game-over-p lives (scramble-sitcom sitcom guessed-letters))))
     (when game-over
