@@ -1,0 +1,17 @@
+* Tic-Tac-Toe 
+
+** Usage
+
+** Installation
+
+** Author
+
++ Juanbsanchez (juanbsanchez1988@gmail.com)
+
+** Copyright
+
+Copyright (c) 2021 Juanbsanchez (juanbsanchez1988@gmail.com)
+
+** License
+
+Licensed under the LLGPL License.
