@@ -43,9 +43,138 @@
 	    coords
 	    (player-turn board ))))))
 
+(defun game-over-p (board)
+  (flet ((draw-p (board)
+	   (let ((counter 0))
+	     (dotimes (x 3)
+	       (dotimes (y 3)
+		 (when (equal '- (aref board x y))
+		   (incf counter))))
+
+	     (zerop counter))))
+    (cond
+      ;; Rows
+      ((and (equal
+	     (aref board 0 0)
+	     (aref board 0 1))
+
+	    (equal
+	     (aref board 0 0)
+	     (aref board 0 2))
+
+	    (not (equal (aref board 0 0)
+			'-)))
+       t)
+      
+      ((and (equal
+	     (aref board 1 0)
+	     (aref board 1 1))
+
+	    (equal
+	     (aref board 1 0)
+	     (aref board 1 2))
+
+	    (not (equal (aref board 1 0)
+			'-)))
+       t)
+
+      ((and (equal
+	     (aref board 2 0)
+	     (aref board 2 1))
+
+	    (equal
+	     (aref board 2 0)
+	     (aref board 2 2))
+
+	    (not (equal (aref board 2 0)
+			'-)))
+       t)
+      
+      ;; Columns
+      ((and (equal
+	     (aref board 0 0)
+	     (aref board 1 1))
+
+	    (equal
+	     (aref board 0 0)
+	     (aref board 2 0))
+
+	    (not (equal (aref board 0 0)
+			'-)))
+       t)
+      
+      ((and (equal
+	     (aref board 0 1)
+	     (aref board 1 1))
+
+	    (equal
+	     (aref board 0 1)
+	     (aref board 2 1))
+
+	    (not (equal (aref board 0 1)
+			'-)))
+       t)
+
+      ((and (equal
+	     (aref board 0 2)
+	     (aref board 1 2))
+
+	    (equal
+	     (aref board 0 2)
+	     (aref board 2 2))
+
+	    (not (equal (aref board 0 2)
+			'-)))
+       t)
+
+      ;; Diagonals
+      ((and (equal
+	     (aref board 0 0)
+	     (aref board 1 1))
+
+	    (equal
+	     (aref board 0 0)
+	     (aref board 2 2))
+
+	    (not (equal (aref board 0 0)
+			'-)))
+       t)
+
+      ((and (equal
+	     (aref board 0 2)
+	     (aref board 1 1))
+
+	    (equal
+	     (aref board 0 2)
+	     (aref board 2 0))
+
+	    (not (equal (aref board 0 2)
+			'-)))
+       t)
+
+      ((draw-p board) t)
+      
+      ; Otherwise nil
+      (t nil))))
+
 (defun game (&key (board (make-array '(3 3) :initial-element '-)))
-  (update-board board '(:x 0 :y 0) "x")
+  (let ((turn-counter (1+ (random 2 (make-random-state t)))))
+    (do ()
+	((game-over-p board))
+
+      (display-board board)
+
+      (if (evenp turn-counter)
+	  (let ((coords (player-turn board)))
+	    (update-board board coords "x"))
+
+	  (let ((coords (cpu-turn board)))
+	    (update-board board coords "o")))
+
+      (incf turn-counter)))
+  
   (display-board board)
-  (format t "~A~%" (player-turn board)))
+  
+  (format t "~&Game Over!"))
 
 (game)  
