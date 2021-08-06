@@ -8,7 +8,7 @@
       (if (= y 2)
 	  (format t "~A~%" (aref board x y))
 	  (format t "~A | " (aref board x y)))))
-  (format t "~%"))
+  (force-output))
 
 (defun update-board (board coords player)
   (setf
@@ -16,7 +16,7 @@
    player))
 
 (defun valid-position-p (board coords)
-  (equal '- (aref board (getf coords :x) (getf coords :y))))
+  (eql '- (aref board (getf coords :x) (getf coords :y))))
 
 
 (defun cpu-turn (board)
@@ -44,118 +44,122 @@
 	    (player-turn board ))))))
 
 (defun game-over-p (board)
-  (flet ((draw-p (board)
-	   (let ((counter 0))
+  (flet ((draw-p ()
 	     (dotimes (x 3)
 	       (dotimes (y 3)
-		 (when (equal '- (aref board x y))
-		   (incf counter))))
+		 (when (eql '- (aref board x y))
+		   (return-from draw-p))))
 
-	     (zerop counter))))
+	     t))
     (cond
       ;; Rows
-      ((and (equal
+      ((and (eql
 	     (aref board 0 0)
 	     (aref board 0 1))
 
-	    (equal
+	    (eql
 	     (aref board 0 0)
 	     (aref board 0 2))
 
-	    (not (equal (aref board 0 0)
+	    (not (eql (aref board 0 0)
 			'-)))
        t)
       
-      ((and (equal
+      ((and (eql
 	     (aref board 1 0)
 	     (aref board 1 1))
 
-	    (equal
+	    (eql
 	     (aref board 1 0)
 	     (aref board 1 2))
 
-	    (not (equal (aref board 1 0)
+	    (not (eql (aref board 1 0)
 			'-)))
        t)
 
-      ((and (equal
+      ((and (eql
 	     (aref board 2 0)
 	     (aref board 2 1))
 
-	    (equal
+	    (eql
 	     (aref board 2 0)
 	     (aref board 2 2))
 
-	    (not (equal (aref board 2 0)
+	    (not (eql (aref board 2 0)
 			'-)))
        t)
       
       ;; Columns
-      ((and (equal
+      ((and (eql
 	     (aref board 0 0)
 	     (aref board 1 1))
 
-	    (equal
+	    (eql
 	     (aref board 0 0)
 	     (aref board 2 0))
 
-	    (not (equal (aref board 0 0)
+	    (not (eql (aref board 0 0)
 			'-)))
        t)
       
-      ((and (equal
+      ((and (eql
 	     (aref board 0 1)
 	     (aref board 1 1))
 
-	    (equal
+	    (eql
 	     (aref board 0 1)
 	     (aref board 2 1))
 
-	    (not (equal (aref board 0 1)
+	    (not (eql (aref board 0 1)
 			'-)))
        t)
 
-      ((and (equal
+      ((and (eql
 	     (aref board 0 2)
 	     (aref board 1 2))
 
-	    (equal
+	    (eql
 	     (aref board 0 2)
 	     (aref board 2 2))
 
-	    (not (equal (aref board 0 2)
+	    (not (eql (aref board 0 2)
 			'-)))
        t)
 
       ;; Diagonals
-      ((and (equal
+      ((and (eql
 	     (aref board 0 0)
 	     (aref board 1 1))
 
-	    (equal
+	    (eql
 	     (aref board 0 0)
 	     (aref board 2 2))
 
-	    (not (equal (aref board 0 0)
+	    (not (eql (aref board 0 0)
 			'-)))
        t)
 
-      ((and (equal
+      ((and (eql
 	     (aref board 0 2)
 	     (aref board 1 1))
 
-	    (equal
+	    (eql
 	     (aref board 0 2)
 	     (aref board 2 0))
 
-	    (not (equal (aref board 0 2)
+	    (not (eql (aref board 0 2)
 			'-)))
        t)
 
-      ((draw-p board) t)
+      ((draw-p) t)
       
       ; Otherwise nil
       (t nil))))
+
+(defclass player ()
+  ((icon :initarg :icon :initform (error "Must provide an icon"))))
+
+
 
 (defun game (&key (board (make-array '(3 3) :initial-element '-)))
   (let ((turn-counter (1+ (random 2 (make-random-state t)))))
