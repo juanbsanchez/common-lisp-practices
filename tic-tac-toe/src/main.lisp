@@ -159,6 +159,32 @@
 (defclass player ()
   ((icon :initarg :icon :initform (error "Must provide an icon"))))
 
+(defclass human (player)
+  ())
+
+(defclass cpu (player)
+  ())
+
+(defgeneric turn (player board)
+  (:documentation "Execute a player turn"))
+
+(defmethod turn ((player cpu) board)
+  (do* ((x (random (array-dimension board 0)) (random (array-dimension board 0)))
+	(y (random (array-dimension board 0)) (random (array-dimension board 0)))
+	(coords `(:x ,x :y ,y) `(:x ,x :y ,y)))
+       ((valid-position-p board coords)
+	coords)))
+
+(defmethod turn ((player human) board)
+  (flet ((get-pos (character)
+	   (format t "Please enter ~A: " character)
+	   (force-output)
+	   (parse-integer (read-line) :junk-allowed t)))
+    (do* ((x (get-pos "X") (get-pos "X"))
+	  (y (get-pos "Y") (get-pos "Y"))
+	  (coords `(:x ,x :y ,y) `(:x ,x :y ,y)))
+	 ((and (member x '(0 1 2)) (member y '(0 1 2)) (valid-position-p board coords))
+	  coords))))
 
 
 (defun game (&key (board (make-array '(3 3) :initial-element '-)))
